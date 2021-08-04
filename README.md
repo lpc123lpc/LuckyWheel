@@ -1,24 +1,9 @@
 # luckywheel
 
-## Project setup
-```
-yarn install
-```
+实现了用户注册、登录、抽奖、后台管理奖品设置奖项的的功能。
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+注册的用户类型都是普通用户，只可以看到抽奖页面
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+管理员账户
++ 账号： admin
++ 密码： 123456
