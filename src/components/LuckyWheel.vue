@@ -1,15 +1,230 @@
 <template>
-  <div class="hello">
+  <div class="hello" >
+    <el-button v-if="userType === '1'" type="text" style="margin-left: 60%;color: #B0C4DE" @click="gotoServer">点击前往管理页面</el-button>
+    <div class="header">
+    </div>
+    <div class="wheel-container">
+      <div class="pointer" @click="beginRotate"></div>
+      <div class="wheel" :style="rotateStyle">
+        <div class="prize-list">
+          <div class="prize-item"
+               v-for="(item,index) in prizeList"
+               :key="index"
+               :style="item.style">
+            <div class="prize-img" style="width: 70%;height: 40%">
+              <el-image fit="contain" :src="item.prizeImg" alt="图片不见了" style="width: 100%;height: 100%"></el-image>
+            </div>
+            <div class="prize-name">
+              <span >{{item.prizeName}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <ul style="color: #B0C4DE">
+        <li v-for="(item,index) in prizeList" :key="index">{{item.prizeName}} {{item.rate}}%</li>
+      </ul>
+    </div>
+    <div class="prizeDisplay" v-if="open">
+      <span>恭喜抽中了{{prize.prizeName}}</span>
+      <img :src="prize.prizeImg" style="object-fit: cover;width: 80%;height: 80%">
+      <el-button size="mini" @click="prizeConfirm">确定</el-button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'HelloWorld',
+  data() {
+    return {
+      open: false,
+      userType: null,
+      prizeList: [],
+      prizeAngleList: [],
+      rotateAngle: 0,
+      index: 0,
+      prize: {},
+      isRotating: false,
+      config: {
+        duration: 5000,
+        circle: 8,
+        mode: 'ease-in-out'
+      }
+    }
+  },
+  computed: {
+    rotateStyle () {
+      return `
+        -webkit-transition: transform ${this.config.duration}ms ${this.config.mode};
+        transition: transform ${this.config.duration}ms ${this.config.mode};
+        -webkit-transform: rotate(${this.rotateAngle}deg);
+            transform: rotate(${this.rotateAngle}deg);`
+    }
+  },
+  mounted() {
+    this.user.nowUser = this.$cookies.get('username')
+    this.userType = this.$cookies.get('userType')
+    console.log(this.userType)
+    if (this.user.nowUser === null) {
+      this.$router.push({path:'/Login'})
+      this.$message({
+        type: "info",
+        message: '请登录'
+      })
+    }
+    this.getPrizeList()
+    // console.log("prizeList")
+    // console.log(this.prizeList)
+  },
+  methods: {
+    prizeConfirm() {
+      this.open = false
+      this.isRotating = false
+    },
+    getPrizeList() {
+      let that = this
+      fetch('https://qc5plm.fn.thelarkcloud.com/getPrizeList').then(response => {
+        return response.json()
+      }).then(myJson => {
+        that.initialAngel(myJson.ids)
+      })
+    },
+    initialAngel(list) {
+      const average = 60
+      const half = average / 2
+      // 添加每个奖项的旋转显示角度
+      console.log(list)
+      for(let i = 0;i < 6;i++) {
+        let item = list[i]
+        let angle = -(i * average + half)
+        this.prizeAngleList.push((i * average) + half)
+        item.style = `-webkit-transform: rotate(${angle}deg);
+                      transform: rotate(${angle}deg);`
+        this.prizeList.push(item)
+      }
+    },
+    beginRotate() {
+      // 点击开始抽奖
+      const {isRotating,config,rotateAngle,prizeAngleList} = this
+      // 0-5 奖项index
+      if (isRotating) return
+      this.index = this.getRandomIndex()
+      console.log(this.index)
+      this.isRotating = true
+      let angle = rotateAngle + config.circle * 360 + prizeAngleList[this.index]
+                    - (rotateAngle % 360)
+      this.rotateAngle = angle
+      //旋转结束
+      setTimeout(() => {
+        this.rotateOver()
+      },config.duration + 50)
+    },
+    getRandomIndex() {
+      let number = parseInt(Math.random() * 100)
+      let i = 0;
+      let rateNumber = this.prizeList[i].rate
+      console.log(number)
+      for (i = 0; i< 6;i++) {
+        rateNumber = rateNumber + this.prizeList[i].rate
+        if (number < rateNumber) {
+          return i
+        }
+      }
+      return i
+    },
+    rotateOver() {
+      this.prize = this.prizeList[this.index]
+      // this.$message({
+      //   type: 'success',
+      //   message: '恭喜抽中了' + this.prize.prizeName
+      // })
+      this.open = true
+    },
+    gotoServer() {
+      this.$router.push({path:'/server'})
+    }
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.hello {
+  width: 100%;
+  background: url("https://p1.xywm.ltd/2021/07/20/eb999c2b5bd7d.png");
+  min-height: 100%;
+  background-size: cover;
+}
+.header {
+  width: 100%;
+  padding-top: 40%;
+  background: url("https://p1.xywm.ltd/2021/07/20/e6cd3e92d321a.png");
+  background-size: cover;
+}
+.wheel-container{
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  border-radius: 50%;
+}
+.wheel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: url("https://p1.xywm.ltd/2021/07/20/d580ff5489002.png") no-repeat center top;
+  background-size: cover;
+  color: #fff;
+}
+.pointer {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  z-index: 2;
+  width: 16%;
+  height: 26%;
+  background: url("https://p1.xywm.ltd/2021/07/20/fe8d834dadf8c.png") no-repeat center top;
+  background-size: cover;
+  transform: translate3d(-50%, -50%, 0);
+}
+.prize-list {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.prize-list .prize-item {
+  position: absolute;
+  width: 25%;
+  height: 50%;
+  top: 0;
+  left: 50%;
+  margin-left: -12.5%;
+  transform-origin: 50% 100%;
+  color: #B0C4DE;
+}
+.prize-img {
+  position: relative;
+  margin: 0 auto;
+  top: 20%;
+}
+.prize-name {
+  position: relative;
+  margin: 0 auto;
+  top: 20%
+}
+.prizeDisplay {
+  position: absolute;
+  width: 60%;
+  left: 18%;
+  top: 20%;
+  padding: 2%;
+  background-color: #B0C4DE;
+  border-radius: 5px;
+  z-index: 100;
+}
 </style>

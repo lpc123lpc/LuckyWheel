@@ -1,27 +1,26 @@
 <template>
-  <div id="app">
-    <HelloWorld/>
+  <div id="app" >
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/LuckyWheel.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  name: 'App'
 }
 </script>
 
 <style>
 #app {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
+html, body{ margin:0; height:100%; width: 100% }
 </style>
