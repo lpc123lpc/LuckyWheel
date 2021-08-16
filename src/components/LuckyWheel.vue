@@ -22,14 +22,27 @@
       </div>
     </div>
     <div>
-      <ul style="color: #B0C4DE">
-        <li v-for="(item,index) in prizeList" :key="index">{{item.prizeName}} {{item.rate}}%</li>
-      </ul>
+      <table>
+        <tr>
+          <th>奖品名</th>
+          <th>中奖率</th>
+          <th>剩余数量</th>
+        </tr>
+        <tr v-for="(item,index) in prizeList" :key="index">
+          <td>{{item.prizeName}}</td>
+          <td>{{item.rate}}%</td>
+          <td>{{item.num}}</td>
+        </tr>
+      </table>
     </div>
     <div class="prizeDisplay" v-if="open">
-      <span>恭喜抽中了{{prize.prizeName}}</span>
+      <div style="text-align: center">
+        <span>恭喜抽中了{{prize.prizeName}}</span>
+      </div>
       <img :src="prize.prizeImg" style="object-fit: cover;width: 80%;height: 80%">
-      <el-button size="mini" @click="prizeConfirm">确定</el-button>
+      <div>
+        <el-button size="mini" @click="prizeConfirm">确定</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -159,6 +172,14 @@ export default {
     padding-top: 100%;
     border-radius: 50%;
   }
+  td {
+    text-align: center;
+    width: 4rem;
+  }
+  th {
+    text-align: center;
+    width: 4rem;
+  }
 }
 @media screen and (min-width: 501px){
   .wheel-container{
@@ -167,6 +188,14 @@ export default {
     width: 50%;
     padding-top: 50%;
     border-radius: 50%;
+  }
+  td {
+    text-align: center;
+    width: 5rem;
+  }
+  th {
+    text-align: center;
+    width: 5rem;
   }
 }
 .hello {
@@ -231,11 +260,19 @@ export default {
 .prizeDisplay {
   position: absolute;
   width: 60%;
+  height: 60%;
   left: 18%;
   top: 20%;
   padding: 2%;
   background-color: #B0C4DE;
   border-radius: 5px;
   z-index: 100;
+}
+table {
+  border: 1px;
+  color: #B0C4DE;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
 }
 </style>
