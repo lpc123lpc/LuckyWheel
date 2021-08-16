@@ -110,36 +110,36 @@ export default {
       const {isRotating,config,rotateAngle,prizeAngleList} = this
       // 0-5 奖项index
       if (isRotating) return
-      this.index = this.getRandomIndex()
-      console.log(this.index)
       this.isRotating = true
-      let angle = rotateAngle + config.circle * 360 + prizeAngleList[this.index]
+      fetch('https://qc5plm.fn.thelarkcloud.com/getPrize').then(response => {
+        return response.json()
+      }).then(myJson => {
+        this.index = myJson.prizeIndex
+        let angle = rotateAngle + config.circle * 360 + prizeAngleList[this.index]
                     - (rotateAngle % 360)
-      this.rotateAngle = angle
+        this.rotateAngle = angle
+        console.log(this.index)
+      })
       //旋转结束
       setTimeout(() => {
         this.rotateOver()
       },config.duration + 50)
     },
-    getRandomIndex() {
-      let number = parseInt(Math.random() * 100)
-      let i = 0;
-      let rateNumber = this.prizeList[i].rate
-      console.log(number)
-      for (i = 0; i< 6;i++) {
-        rateNumber = rateNumber + this.prizeList[i].rate
-        if (number < rateNumber) {
-          return i
-        }
-      }
-      return i
-    },
+    // getRandomIndex() {
+    //   let number = parseInt(Math.random() * 100)
+    //   let i = 0;
+    //   let rateNumber = this.prizeList[i].rate
+    //   console.log(number)
+    //   for (i = 0; i< 6;i++) {
+    //     rateNumber = rateNumber + this.prizeList[i].rate
+    //     if (number < rateNumber) {
+    //       return i
+    //     }
+    //   }
+    //   return i
+    // },
     rotateOver() {
       this.prize = this.prizeList[this.index]
-      // this.$message({
-      //   type: 'success',
-      //   message: '恭喜抽中了' + this.prize.prizeName
-      // })
       this.open = true
     },
     gotoServer() {
@@ -151,6 +151,24 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@media screen and (max-width: 500px){
+  .wheel-container{
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    border-radius: 50%;
+  }
+}
+@media screen and (min-width: 501px){
+  .wheel-container{
+    margin: 0 auto;
+    position: relative;
+    width: 50%;
+    padding-top: 50%;
+    border-radius: 50%;
+  }
+}
 .hello {
   width: 100%;
   background: url("https://p1.xywm.ltd/2021/07/20/eb999c2b5bd7d.png");
@@ -162,13 +180,6 @@ export default {
   padding-top: 40%;
   background: url("https://p1.xywm.ltd/2021/07/20/e6cd3e92d321a.png");
   background-size: cover;
-}
-.wheel-container{
-  margin: 0 auto;
-  position: relative;
-  width: 100%;
-  padding-top: 100%;
-  border-radius: 50%;
 }
 .wheel {
   position: absolute;

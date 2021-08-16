@@ -193,6 +193,7 @@ export default {
 </script>
 
 <style scoped>
+
 .el-form {
   margin: auto;
   padding-left: 20%;
