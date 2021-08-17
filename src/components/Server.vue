@@ -1,12 +1,11 @@
 <template>
- <div style="padding: 30px">
+ <div class="server_container" style="padding: 10px;margin: 0 auto">
    <el-tabs  v-model="activeName" type="card">
      <el-tab-pane label="轮盘奖项管理" name="first">
        <div style="text-align: center">
          <el-button @click="gotoWheel" size="mini">前往抽奖</el-button>
          <el-button type="primary" plain @click="setWheel" size="mini" style="margin-left: 20%">设置转盘奖项</el-button>
        </div>
-
        <el-table :data="selectedPrizeList">
          <el-table-column label="名称" prop="prizeName"/>
          <el-table-column label="中奖率" prop="rate" :formatter="rateFormatter"/>
@@ -30,6 +29,7 @@
        </div>
        <el-table :data="allPrizeList">
          <el-table-column label="名称" prop="prizeName"/>
+         <el-table-column label="库存" prop="num"/>
          <el-table-column label="图片">
            <template   slot-scope="scope">
              <el-image
@@ -40,6 +40,13 @@
          </el-table-column>
          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
            <template slot-scope="scope">
+             <el-button
+                 size="mini"
+                 type="text"
+                 icon="el-icon-plus"
+                 @click="addNum(scope.row,scope.$index)">
+               增加库存
+             </el-button>
              <el-button
                  size="mini"
                  type="text"
@@ -232,6 +239,11 @@ export default {
   },
 
   methods: {
+    // 添加库存
+    addNum(row,index) {
+      console.log(row)
+      console.log(index)
+    },
     reset() {
       this.searchName = null
       this.getAll()
@@ -496,5 +508,19 @@ export default {
 <style>
 .el-message-box {
   width: 350px;
+}
+.el-tabs{
+  border: 1px solid #E4E7ED;
+  box-shadow:2px 2px 2px 1px #ebeef5, -2px -2px 2px 1px #ebeef5;
+}
+@media screen and (max-width: 500px){
+  .server_container {
+    width: 100%;
+  }
+}
+@media screen and (min-width: 501px){
+  .server_container {
+    width: 50%;
+  }
 }
 </style>

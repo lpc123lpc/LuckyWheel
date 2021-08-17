@@ -28,7 +28,7 @@
           <th>中奖率</th>
           <th>剩余数量</th>
         </tr>
-        <tr v-for="(item,index) in prizeList" :key="index">
+        <tr v-for="(item,index) in tableList" :key="index">
           <td>{{item.prizeName}}</td>
           <td>{{item.rate}}%</td>
           <td>{{item.num}}</td>
@@ -56,6 +56,7 @@ export default {
       userType: null,
       prizeList: [],
       prizeAngleList: [],
+      tableList: [],
       rotateAngle: 0,
       index: 0,
       prize: {},
@@ -87,21 +88,27 @@ export default {
         message: '请登录'
       })
     }
-    this.getPrizeList()
+    fetch('https://qc5plm.fn.thelarkcloud.com/getPrizeList').then(response => {
+      return response.json()
+    }).then(myJson => {
+      this.initialAngel(myJson.ids)
+      this.tableList = myJson.ids
+    })
+
     // console.log("prizeList")
     // console.log(this.prizeList)
   },
   methods: {
     prizeConfirm() {
       this.open = false
+      this.getPrizeList()
       this.isRotating = false
     },
     getPrizeList() {
-      let that = this
       fetch('https://qc5plm.fn.thelarkcloud.com/getPrizeList').then(response => {
         return response.json()
       }).then(myJson => {
-        that.initialAngel(myJson.ids)
+        this.tableList = myJson.ids
       })
     },
     initialAngel(list) {
@@ -109,6 +116,8 @@ export default {
       const half = average / 2
       // 添加每个奖项的旋转显示角度
       console.log(list)
+      this.prizeAngleList = []
+      this.prizeList = []
       for(let i = 0;i < 6;i++) {
         let item = list[i]
         let angle = -(i * average + half)
@@ -132,6 +141,7 @@ export default {
                     - (rotateAngle % 360)
         this.rotateAngle = angle
         console.log(this.index)
+        this.prize = this.prizeList[this.index]
       })
       //旋转结束
       setTimeout(() => {
@@ -152,7 +162,6 @@ export default {
     //   return i
     // },
     rotateOver() {
-      this.prize = this.prizeList[this.index]
       this.open = true
     },
     gotoServer() {
