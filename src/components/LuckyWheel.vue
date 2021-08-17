@@ -80,7 +80,6 @@ export default {
   mounted() {
     this.user.nowUser = this.$cookies.get('username')
     this.userType = this.$cookies.get('userType')
-    console.log(this.userType)
     if (this.user.nowUser === null) {
       this.$router.push({path:'/Login'})
       this.$message({
@@ -111,7 +110,6 @@ export default {
       const average = 60
       const half = average / 2
       // 添加每个奖项的旋转显示角度
-      console.log(list)
       this.prizeAngleList = []
       this.prizeList = []
       for(let i = 0;i < 6;i++) {
@@ -136,7 +134,7 @@ export default {
         let angle = rotateAngle + config.circle * 360 + prizeAngleList[this.index]
                     - (rotateAngle % 360)
         this.rotateAngle = angle
-        console.log(this.index)
+        // console.log(this.index)
         this.prize = this.prizeList[this.index]
       })
       //旋转结束
@@ -144,19 +142,7 @@ export default {
         this.rotateOver()
       },config.duration + 1000)
     },
-    // getRandomIndex() {
-    //   let number = parseInt(Math.random() * 100)
-    //   let i = 0;
-    //   let rateNumber = this.prizeList[i].rate
-    //   console.log(number)
-    //   for (i = 0; i< 6;i++) {
-    //     rateNumber = rateNumber + this.prizeList[i].rate
-    //     if (number < rateNumber) {
-    //       return i
-    //     }
-    //   }
-    //   return i
-    // },
+    // 旋转结束，打开展示页面，同时重置角度
     rotateOver() {
       this.open = true
       this.config.duration = 0
