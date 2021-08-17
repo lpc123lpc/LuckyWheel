@@ -88,19 +88,14 @@ export default {
         message: '请登录'
       })
     }
-    fetch('https://qc5plm.fn.thelarkcloud.com/getPrizeList').then(response => {
-      return response.json()
-    }).then(myJson => {
-      this.initialAngel(myJson.ids)
-      this.tableList = myJson.ids
-    })
-
+    this.getPrizeList()
     // console.log("prizeList")
     // console.log(this.prizeList)
   },
   methods: {
     prizeConfirm() {
       this.open = false
+      this.config.duration = 5000
       this.getPrizeList()
       this.isRotating = false
     },
@@ -108,6 +103,7 @@ export default {
       fetch('https://qc5plm.fn.thelarkcloud.com/getPrizeList').then(response => {
         return response.json()
       }).then(myJson => {
+        this.initialAngel(myJson.ids)
         this.tableList = myJson.ids
       })
     },
@@ -146,7 +142,7 @@ export default {
       //旋转结束
       setTimeout(() => {
         this.rotateOver()
-      },config.duration + 50)
+      },config.duration + 1000)
     },
     // getRandomIndex() {
     //   let number = parseInt(Math.random() * 100)
@@ -163,6 +159,8 @@ export default {
     // },
     rotateOver() {
       this.open = true
+      this.config.duration = 0
+      this.rotateAngle = 0
     },
     gotoServer() {
       this.$router.push({path:'/server'})
