@@ -140,13 +140,17 @@ export default {
     },
     setLoginStyle() {
       this.flag = 1
-      this.$refs["login-box"].style.border = 'solid #B0C4DE'
-      this.$refs["register-box"].style.border = '0'
+      this.$refs["login-box"].style.borderRight = 'solid #B0C4DE'
+      this.$refs["login-box"].style.borderBottom = 'solid #B0C4DE'
+      this.$refs["register-box"].style.borderLeft = '0'
+      this.$refs["register-box"].style.borderBottom = '0'
     },
     setRegisterStyle() {
       this.flag = 2
-      this.$refs["register-box"].style.border = 'solid #B0C4DE'
-      this.$refs["login-box"].style.border = '0'
+      this.$refs["login-box"].style.borderRight = '0'
+      this.$refs["login-box"].style.borderBottom = '0'
+      this.$refs["register-box"].style.borderLeft = 'solid #B0C4DE'
+      this.$refs["register-box"].style.borderBottom = 'solid #B0C4DE'
     },
     register() {
       this.$refs.registerForm.validate(valid => {
@@ -203,10 +207,11 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url("https://p1.xywm.ltd/2021/07/24/a96a7a7ead7d0.png");
+  background: url("https://p1.xywm.ltd/2021/07/24/a96a7a7ead7d0.png") center;
   background-size: cover;
 }
 .form-container {
+  box-sizing: border-box;
   margin-top: 10rem;
   width: 80%;
   margin-left: auto;
@@ -215,10 +220,10 @@ export default {
 }
 .login-tab {
   display: inline-block;
-  width: 49%;
+  width: 49.5%;
 }
 .register-tab {
   display: inline-block;
-  width: 49%;
+  width: 49.5%;
 }
 </style>

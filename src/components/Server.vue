@@ -21,9 +21,9 @@
        </el-table>
      </el-tab-pane>
      <el-tab-pane label="奖项库管理管理" name="second">
-       <div>
-         <el-input style="width: 30%" v-model="searchName" placeholder="请输入名称" size="mini"/>
-         <el-button size="mini" @click="search">搜索</el-button>
+       <div style="text-align: left">
+         <el-input style="width: 25%" v-model="searchName" placeholder="请输入名称" size="mini"/>
+         <el-button size="mini" @click="search" style="margin-left: 10px">搜索</el-button>
          <el-button size="mini" @click="reset">重置</el-button>
          <el-button type="primary" plain @click="addPrize" size="mini">新增奖项</el-button>
        </div>
@@ -44,7 +44,7 @@
                  size="mini"
                  type="text"
                  icon="el-icon-plus"
-                 @click="addNum(scope.row,scope.$index)">
+                 @click="addNum(scope.row)">
                增加库存
              </el-button>
              <el-button
@@ -64,6 +64,11 @@
        </el-table>
      </el-tab-pane>
    </el-tabs>
+
+   <el-dialog title="添加库存" :visible.sync="isAddNumFormOpen" width="300px">
+     <el-input type="number" v-model="addNumForm.num"/>
+     <el-button @click="handleAddNum">确定</el-button>
+   </el-dialog>
 
 <!--   修改库中奖项数据-->
    <el-dialog :title= title :visible.sync="isFormOpen" width="80%" append-to-body>
@@ -142,8 +147,6 @@
      </el-dialog>
    </el-dialog>
 
-
-
  </div>
 </template>
 
@@ -158,6 +161,13 @@ export default {
   name: "Server",
   data () {
     return {
+      //添加的库存
+      addNumForm: {
+        prizeId: null,
+        num: null
+      },
+      //是否增加库存
+      isAddNumFormOpen: false,
       // /搜索框中name
       searchName: null,
       // id to name
@@ -194,6 +204,11 @@ export default {
         _id: null,
         prizeName: null,
         prizeImg: null,
+      },
+      // 添加数量对话框
+      numForm: {
+        _id: null,
+        prizeAddNum: null,
       },
       // 上传的图片文件
       fileList: [],
@@ -239,10 +254,14 @@ export default {
   },
 
   methods: {
+    //向后台提交库存
+    handleAddNum() {
+
+    },
     // 添加库存
-    addNum(row,index) {
-      console.log(row)
-      console.log(index)
+    addNum(row) {
+      this.addNumForm.prizeId = row.num
+      this.isAddNumFormOpen = true
     },
     reset() {
       this.searchName = null
@@ -377,6 +396,20 @@ export default {
     },
     handleForm() {
       this.isFormOpen = false
+      if (this.form.prizeName === null) {
+        this.$message({
+          type:'warning',
+          message: '请输入奖品名称'
+        })
+        return
+      }
+      else if (this.form.prizeImg === null) {
+        this.$message({
+          type: "warning",
+          message: '请上传图片'
+        })
+        return
+      }
       if (this.isAdd === true) {
         fetch('https://qc5plm.fn.thelarkcloud.com/addPrize', {method: 'POST',
           body: JSON.stringify({
@@ -520,7 +553,7 @@ export default {
 }
 @media screen and (min-width: 501px){
   .server_container {
-    width: 50%;
+    width: 70%;
   }
 }
 </style>
