@@ -71,7 +71,7 @@
    </el-dialog>
 
 <!--   修改库中奖项数据-->
-   <el-dialog :title= title :visible.sync="isFormOpen" width="80%" append-to-body>
+   <el-dialog :title= title :visible.sync="isFormOpen" width="70%" append-to-body>
      <el-form :model="form">
        <el-form-item label="奖品名称">
          <el-input v-model="form.prizeName"></el-input>
@@ -256,11 +256,23 @@ export default {
   methods: {
     //向后台提交库存
     handleAddNum() {
-
+      console.log(this.addNumForm)
+      fetch('https://qc5plm.fn.thelarkcloud.com/addPrizeNnum', {
+        method: 'POST',
+        body: JSON.stringify(this.addNumForm),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      }).then(() => {
+        this.isAddNumFormOpen = false
+        this.$message('添加库存成功')
+        this.getAll()
+      })
     },
     // 添加库存
     addNum(row) {
-      this.addNumForm.prizeId = row.num
+      console.log(row)
+      this.addNumForm.prizeId = row._id
       this.isAddNumFormOpen = true
     },
     reset() {
@@ -548,12 +560,12 @@ export default {
 }
 @media screen and (max-width: 500px){
   .server_container {
-    width: 100%;
+    width: 95%;
   }
 }
 @media screen and (min-width: 501px){
   .server_container {
-    width: 70%;
+    width: 80%;
   }
 }
 </style>
